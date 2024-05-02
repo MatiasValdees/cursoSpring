@@ -1,0 +1,3 @@
+http://localhost:8080/best_travel/.well-known/oauth-authorization-server
+
+https://oauthdebugger.com/

@@ -1,0 +1,14 @@
+sudo su
+
+curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version 
+
+
+docker run --name best_travel_sql -p 5432:5432 -e  POSTGRES_DB=best_travel -e POSTGRES_USER=alejandro -e POSTGRES_PASSWORD=debuggeandoideas -v ./db/sql/create_schema.sql:/docker-entrypoint-initdb.d/create_schema.sql -v ./db/sql/data.sql:/docker-entrypoint-initdb.d/data.sql postgres:latest
+
+docker run --name best_travel_redis -p 6379:6379 -e REDIS_ARGS="--requirepass debuggeandoideas" redis:6.2-alpine 
+
+docker run --name best_travel_document -p 27017:27017 -e  MONGO_INITDB_ROOT_USERNAME=master -e MONGO_INITDB_ROOT_PASSWORD=debuggeandoideas -e MONGO_INITDB_DATABASE=users -v ./db/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro mongo:6.0.4

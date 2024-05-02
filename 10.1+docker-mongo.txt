@@ -1,0 +1,19 @@
+
+---- Doccker compose ----
+  document-db:
+    image: mongo:6.0.4
+    restart: always
+    container_name: best_travel_users
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: master
+      MONGO_INITDB_ROOT_PASSWORD: debuggeandoideas
+      MONGO_INITDB_DATABASE: app_users
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./db/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      
+     
+---- Docker command ----
+
+docker run --name best_travel_document -p 27017:27017 -e  MONGO_INITDB_ROOT_USERNAME=master -e MONGO_INITDB_ROOT_PASSWORD=debuggeandoideas -e MONGO_INITDB_DATABASE=users -v ./db/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro mongo:6.0.4

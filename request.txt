@@ -1,0 +1,7 @@
+curl --location 'http://localhost:8080/best_travel/oauth2/token' \
+--header 'Content-Type: application/x-www-form-urlencoded' \
+--header 'Authorization: Basic Y2xpZW50OnNlY3JldA==' \
+--header 'Cookie: JSESSIONID=8F3C03E633204CAA6ED7400E13A8C0D1' \
+--data-urlencode 'redirect_uri=https://oauthdebugger.com/debug' \
+--data-urlencode 'grant_type=authorization_code' \
+--data-urlencode 'code=iIifheHfsl1eDDtdL-kfMQ0DqN4OE2gXIekxTptmEx-m4WfnQlEplzRLjs0np76bHo8jEhzPZpGKm0Ls5ksNn4gojSzReeDqavwVTplXVjOiAFCRSadqYFRqQGij5cJs'

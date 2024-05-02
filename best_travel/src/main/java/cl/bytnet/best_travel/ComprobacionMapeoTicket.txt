@@ -1,0 +1,77 @@
+//		COMPROBACION DE MAPEO
+
+package cl.bytnet.best_travel;
+
+import cl.bytnet.best_travel.Domain.Entities.CustomerEntity;
+import cl.bytnet.best_travel.Domain.Entities.ReservationEntity;
+import cl.bytnet.best_travel.Domain.Entities.TicketEntity;
+import cl.bytnet.best_travel.Domain.Entities.TourEntity;
+import cl.bytnet.best_travel.Domain.Repositories.*;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+
+@SpringBootApplication
+public class BestTravelApplication implements CommandLineRunner {
+
+	private final CustomerRepository customerRepository;
+	private final FlyRepository flyRepository;
+	private final HotelRepository hotelRepository;
+	private final ReservationRepository reservationRepository;
+	private final TicketRepository ticketRepository;
+	private final TourRepository tourRepository;
+
+	public BestTravelApplication(CustomerRepository customerRepository, FlyRepository flyRepository, HotelRepository hotelRepository, ReservationRepository reservationRepository, TicketRepository ticketRepository, TourRepository tourRepository) {
+		this.customerRepository = customerRepository;
+		this.flyRepository = flyRepository;
+		this.hotelRepository = hotelRepository;
+		this.reservationRepository = reservationRepository;
+		this.ticketRepository = ticketRepository;
+		this.tourRepository = tourRepository;
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		var customer= customerRepository.findById("VIKI771012HMCRG093").get();
+		var fly=flyRepository.findById(1L).get();
+		var hotel=hotelRepository.findById(1L).get();
+		var tour= TourEntity.builder().customer(customer).build();
+		var ticket= TicketEntity.builder().id(UUID.randomUUID())
+				.customer(customer)
+				.fly(fly)
+				.arrivalDate(LocalDateTime.now())
+				.departureDate(LocalDateTime.now())
+				.price(fly.getPrice().multiply(BigDecimal.TEN))
+				.purchaseDate(LocalDateTime.now())
+				.tour(tour)
+				.build();
+		var reservation= ReservationEntity.builder()
+				.hotel(hotel)
+				.dateReservation(LocalDateTime.now())
+				.id(UUID.randomUUID())
+				.dateStart(LocalDate.now())
+				.dateEnd(LocalDate.now())
+				.totalDays(1)
+				.price(hotel.getPrice().multiply(BigDecimal.TEN))
+				.customer(customer)
+				.tour(tour)
+				.build();
+
+
+		tour.addTicket(ticket);
+		tour.updateTicket();
+
+		tour.addReservation(reservation);
+		tour.updateReservation();
+
+		var tourSaved=this.tourRepository.save(tour);
+		Thread.sleep(10000);
+		this.tourRepository.deleteById(tourSaved.getId());
+	}
+}
